@@ -1,0 +1,2 @@
+export const api_key = '81234213h234234j432a4ad0c256c620d'
+export const api_address = 'https://api.themoviedb.org'
