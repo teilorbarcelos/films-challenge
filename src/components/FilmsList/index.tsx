@@ -4,7 +4,7 @@ import styles from './styles.module.scss'
 
 interface Props {
   title: string
-  filmsList: (FilmProps | undefined)[]
+  filmsList: Partial<FilmProps>[]
 }
 
 export function FilmsList({ title, filmsList }: Props) {
