@@ -6,21 +6,21 @@ import { api } from '../../services/api'
 import { api_key } from '../../variables'
 import styles from './styles.module.scss'
 
-export function MovieModal() {
+export function FilmModal() {
   const [releaseDate, setReleaseDate] = useState('')
   const [trailerKey, setTrailerKey] = useState<string | null>(null)
-  const [currentMovie, setCurrentMovie] = useState<Partial<FilmProps>>({})
-  const { movieModalOpen, setMovieModalOpen, movieDetails } = useFilms()
+  const [currentFilm, setCurrentFilm] = useState<Partial<FilmProps>>({})
+  const { filmModalOpen, setFilmModalOpen, filmDetails } = useFilms()
 
-  async function getCurrentMovieInfo() {
-    api.get(`https://api.themoviedb.org/3/movie/${movieDetails.id}/videos?api_key=${api_key}&language=pt-br`)
+  async function getCurrentFilmInfo() { // função que atualiza as informações na tela de acordo com o filme escolhido pelo usuário
+    api.get(`https://api.themoviedb.org/3/movie/${filmDetails.id}/videos?api_key=${api_key}&language=pt-br`)
       .then(response => {
         if (response.data.results.length > 0) {
           setTrailerKey(response.data.results[0].key)
           return
         }
 
-        api.get(`https://api.themoviedb.org/3/movie/${movieDetails.id}/videos?api_key=${api_key}`)
+        api.get(`https://api.themoviedb.org/3/movie/${filmDetails.id}/videos?api_key=${api_key}`)
           .then(response => {
             if (response.data.results.length > 0) {
               setTrailerKey(response.data.results[0].key)
@@ -31,20 +31,20 @@ export function MovieModal() {
           })
       })
 
-    api.get(`https://api.themoviedb.org/3/movie/${movieDetails.id}?api_key=${api_key}&language=pt-BR&append_to_response=images&include_image_language=pt-BR,null`)
+    api.get(`https://api.themoviedb.org/3/movie/${filmDetails.id}?api_key=${api_key}&language=pt-BR&append_to_response=images&include_image_language=pt-BR,null`)
       .then(response => {
-        setCurrentMovie(response.data)
+        setCurrentFilm(response.data)
         dateFormat(response.data.release_date)
       })
   }
 
-  useEffect(() => {
-    if (movieDetails.id) {
-      getCurrentMovieInfo()
+  useEffect(() => { // dispara a função que pega as informações do filme toda vez que o usuário clickar em um filme diferente
+    if (filmDetails.id) {
+      getCurrentFilmInfo()
     }
-  }, [movieDetails])
+  }, [filmDetails])
 
-  async function dateFormat(date: string) {
+  async function dateFormat(date: string) { // formata a data de lançamento
     const dateSplit = date.split('-')
     const dateResult = `${dateSplit[2]}/${dateSplit[1]}/${dateSplit[0]}`
 
@@ -52,29 +52,30 @@ export function MovieModal() {
   }
 
   return (
-    <section className={`${styles.container} ${movieModalOpen ? styles.visible : ''}`}>
+    <section className={`${styles.container} ${filmModalOpen ? styles.visible : ''}`}>
       <p
-        onClick={() => setMovieModalOpen(false)}
+        onClick={() => setFilmModalOpen(false)}
         className={styles.closeButton}
       >Fechar X</p>
 
-      <div className={styles.movieInfo}>
+      <div className={styles.filmInfo}>
         <div className={styles.description}>
-          <h1>{movieDetails.title}</h1>
+          <h1>{filmDetails.title}</h1>
+
           {
-            currentMovie.tagline && currentMovie.tagline !== '' &&
-            <h2>{currentMovie.tagline}</h2>
+            currentFilm.tagline && currentFilm.tagline !== '' &&
+            <h2>{currentFilm.tagline}</h2>
           }
 
           <p><span>Estréia: </span> {releaseDate}</p>
           <p><span>Gênero: </span> {
-            currentMovie.genres?.map((genre, index) =>
-            (currentMovie.genres && index === currentMovie.genres?.length - 1 ?
+            currentFilm.genres?.map((genre, index) =>
+            (currentFilm.genres && index === currentFilm.genres?.length - 1 ?
               `${genre.name}.` : `${genre.name}, `))
           }</p>
-          <p><span>Duração: </span>{currentMovie.runtime} min.</p>
+          <p><span>Duração: </span>{currentFilm.runtime} min.</p>
 
-          <p>{currentMovie.overview}</p>
+          <p>{currentFilm.overview}</p>
         </div>
 
         <div className={styles.playerWrapper}>
@@ -88,10 +89,8 @@ export function MovieModal() {
               />
               :
               <h3>Trailer não disponível ainda!</h3>
-
           }
         </div>
-
       </div>
     </section>
   )

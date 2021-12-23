@@ -7,22 +7,22 @@ interface CardsProps {
 }
 
 export function Cards({ films }: CardsProps) {
-  const { setMovieDetails, setMovieModalOpen } = useFilms()
+  const { setFilmDetails, setFilmModalOpen } = useFilms()
 
-  async function handleShowMovieDetails(movie: Partial<FilmProps>) {
-    setMovieDetails(movie)
-    setMovieModalOpen(true)
+  async function handleShowFilmDetails(film: Partial<FilmProps>) { //abre o modal e seta as informações do filme escolhido no mesmo
+    setFilmDetails(film)
+    setFilmModalOpen(true)
   }
 
   return (
     <div className={styles.container}>
       {
-        films.map(movie => (
+        films.map(film => (
           <div
-            key={movie?.id}
-            onClick={() => handleShowMovieDetails(movie)}
+            key={film?.id}
+            onClick={() => handleShowFilmDetails(film)}
           >
-            <img src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`} />
+            <img src={`https://image.tmdb.org/t/p/w500/${film?.poster_path}`} />
           </div>
         ))
       }
