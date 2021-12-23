@@ -39,7 +39,7 @@ export function FilmModal() {
   }
 
   useEffect(() => { // dispara a função que pega as informações do filme toda vez que o usuário clickar em um filme diferente
-    if (filmDetails.id) {
+    if (filmDetails && filmDetails.id) {
       getCurrentFilmInfo()
     }
   }, [filmDetails])
@@ -58,40 +58,46 @@ export function FilmModal() {
         className={styles.closeButton}
       >Fechar X</p>
 
-      <div className={styles.filmInfo}>
-        <div className={styles.description}>
-          <h1>{filmDetails.title}</h1>
+      {
+        filmDetails ?
 
-          {
-            currentFilm.tagline && currentFilm.tagline !== '' &&
-            <h2>{currentFilm.tagline}</h2>
-          }
+          <div className={styles.filmInfo}>
+            <div className={styles.description}>
+              <h1>{filmDetails.title}</h1>
 
-          <p><span>Estréia: </span> {releaseDate}</p>
-          <p><span>Gênero: </span> {
-            currentFilm.genres?.map((genre, index) =>
-            (currentFilm.genres && index === currentFilm.genres?.length - 1 ?
-              `${genre.name}.` : `${genre.name}, `))
-          }</p>
-          <p><span>Duração: </span>{currentFilm.runtime} min.</p>
+              {
+                currentFilm.tagline && currentFilm.tagline !== '' &&
+                <h2>{currentFilm.tagline}</h2>
+              }
 
-          <p>{currentFilm.overview}</p>
-        </div>
+              <p><span>Estréia: </span> {releaseDate}</p>
+              <p><span>Gênero: </span> {
+                currentFilm.genres?.map((genre, index) =>
+                (currentFilm.genres && index === currentFilm.genres?.length - 1 ?
+                  `${genre.name}.` : `${genre.name}, `))
+              }</p>
+              <p><span>Duração: </span>{currentFilm.runtime} min.</p>
 
-        <div className={styles.playerWrapper}>
-          {
-            trailerKey ?
-              <ReactPlayer
-                url={`https://www.youtube.com/watch?v=${trailerKey}`}
-                className={styles.player}
-                width='100%'
-                height='100%'
-              />
-              :
-              <h3>Trailer não disponível ainda!</h3>
-          }
-        </div>
-      </div>
+              <p>{currentFilm.overview}</p>
+            </div>
+
+            <div className={styles.playerWrapper}>
+              {
+                trailerKey ?
+                  <ReactPlayer
+                    url={`https://www.youtube.com/watch?v=${trailerKey}`}
+                    className={styles.player}
+                    width='100%'
+                    height='100%'
+                  />
+                  :
+                  <h3>Trailer não disponível ainda!</h3>
+              }
+            </div>
+          </div> :
+
+          <h1>Nenhuma informação disponível no momento!</h1>
+      }
     </section>
   )
 }

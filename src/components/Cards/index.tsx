@@ -17,14 +17,16 @@ export function Cards({ films }: CardsProps) {
   return (
     <div className={styles.container}>
       {
-        films.map(film => (
-          <div
-            key={film?.id}
-            onClick={() => handleShowFilmDetails(film)}
-          >
-            <img src={`https://image.tmdb.org/t/p/w500/${film?.poster_path}`} />
-          </div>
-        ))
+        films ?
+          films.map(film => (
+            <div
+              key={film?.id}
+              onClick={() => handleShowFilmDetails(film)}
+            >
+              <img src={`https://image.tmdb.org/t/p/w500/${film?.poster_path}`} />
+            </div>
+          )) :
+          <h1>Nenhum filme disponível nesta lista ainda!</h1>
       }
     </div>
   )
