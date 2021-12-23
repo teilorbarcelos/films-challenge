@@ -24,27 +24,33 @@ type FilmsProviderProps = {
 }
 
 export type FilmsContextProps = {
-  now_playng: Partial<FilmProps[]>
-  dcComics: Partial<FilmProps[]>
-  marvel: Partial<FilmProps[]>
+  now_playng: Partial<FilmProps>[]
+  dcComics: Partial<FilmProps>[]
+  marvel: Partial<FilmProps>[]
+  movieDetails: Partial<FilmProps>
+  setMovieDetails: React.Dispatch<React.SetStateAction<Partial<FilmProps>>>
+  movieModalOpen: boolean
+  setMovieModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const FilmsContext = createContext<FilmsContextProps>({} as FilmsContextProps)
 
 export function FilmsProvider({ children }: FilmsProviderProps) {
-  const [now_playng, setNow_playng] = useState<Partial<FilmProps[]>>([])
-  const [marvel, setMarvel] = useState<Partial<FilmProps[]>>([])
-  const [dcComics, setDcComics] = useState<Partial<FilmProps[]>>([])
+  const [movieModalOpen, setMovieModalOpen] = useState(false)
+  const [movieDetails, setMovieDetails] = useState<Partial<FilmProps>>({})
+  const [now_playng, setNow_playng] = useState<Partial<FilmProps>[]>([])
+  const [marvel, setMarvel] = useState<Partial<FilmProps>[]>([])
+  const [dcComics, setDcComics] = useState<Partial<FilmProps>[]>([])
 
   async function getFilms() {
     api.get(`/3/movie/now_playing?page=1&api_key=${api_key}&language=pt-BR`)
-      .then(response => setNow_playng(response.data.results as Partial<FilmProps[]>))
+      .then(response => setNow_playng(response.data.results as Partial<FilmProps>[]))
 
     api.get(`/4/list/1?page=1&api_key=${api_key}&language=pt-BR`)
-      .then(response => setMarvel(response.data.results as Partial<FilmProps[]>))
+      .then(response => setMarvel(response.data.results as Partial<FilmProps>[]))
 
     api.get(`/4/list/3?page=1&api_key=${api_key}&language=pt-BR`)
-      .then(response => setDcComics(response.data.results as Partial<FilmProps[]>))
+      .then(response => setDcComics(response.data.results as Partial<FilmProps>[]))
   }
 
   useEffect(() => {
@@ -52,7 +58,17 @@ export function FilmsProvider({ children }: FilmsProviderProps) {
   }, [])
 
   return (
-    <FilmsContext.Provider value={{ now_playng, marvel, dcComics }}>
+    <FilmsContext.Provider
+      value={{
+        now_playng,
+        marvel,
+        dcComics,
+        movieDetails,
+        setMovieDetails,
+        movieModalOpen,
+        setMovieModalOpen
+      }}
+    >
       {children}
     </FilmsContext.Provider>
   )
