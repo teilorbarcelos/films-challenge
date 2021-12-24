@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import { api_key } from "../variables"
 import { api } from "../services/api"
 
@@ -27,17 +27,17 @@ export type FilmsContextProps = {
   now_playng: Partial<FilmProps>[]
   dcComics: Partial<FilmProps>[]
   marvel: Partial<FilmProps>[]
-  movieDetails: Partial<FilmProps>
-  setMovieDetails: React.Dispatch<React.SetStateAction<Partial<FilmProps>>>
-  movieModalOpen: boolean
-  setMovieModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  filmDetails: Partial<FilmProps>
+  setFilmDetails: React.Dispatch<React.SetStateAction<Partial<FilmProps>>>
+  filmModalOpen: boolean
+  setFilmModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const FilmsContext = createContext<FilmsContextProps>({} as FilmsContextProps)
 
 export function FilmsProvider({ children }: FilmsProviderProps) {
-  const [movieModalOpen, setMovieModalOpen] = useState(false)
-  const [movieDetails, setMovieDetails] = useState<Partial<FilmProps>>({})
+  const [filmModalOpen, setFilmModalOpen] = useState(false)
+  const [filmDetails, setFilmDetails] = useState<Partial<FilmProps>>({})
   const [now_playng, setNow_playng] = useState<Partial<FilmProps>[]>([])
   const [marvel, setMarvel] = useState<Partial<FilmProps>[]>([])
   const [dcComics, setDcComics] = useState<Partial<FilmProps>[]>([])
@@ -63,10 +63,10 @@ export function FilmsProvider({ children }: FilmsProviderProps) {
         now_playng,
         marvel,
         dcComics,
-        movieDetails,
-        setMovieDetails,
-        movieModalOpen,
-        setMovieModalOpen
+        filmDetails,
+        setFilmDetails,
+        filmModalOpen,
+        setFilmModalOpen
       }}
     >
       {children}
