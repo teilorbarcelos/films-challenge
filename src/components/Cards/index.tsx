@@ -23,7 +23,7 @@ export function Cards({ films }: CardsProps) {
               key={film?.id}
               onClick={() => handleShowFilmDetails(film)}
             >
-              <img src={`https://image.tmdb.org/t/p/w500/${film?.poster_path}`} />
+              <img src={`https://image.tmdb.org/t/p/w500${film?.poster_path}`} />
             </div>
           )) :
           <h1>Nenhum filme disponível nesta lista ainda!</h1>
